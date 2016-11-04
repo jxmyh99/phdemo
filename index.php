@@ -54,7 +54,7 @@ EOF;
     }else{
         $mes="文件修改失败";
     }
-    alertMes($mes);
+    alertMes($mes,$redirect);
 
 
 }
