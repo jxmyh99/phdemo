@@ -122,14 +122,15 @@ EOF;
                 location.href="index.php?act=delFolder&dirname="+dirname+"&path="+path;
             }
         }
-        function showDetail(t,filename){
+        function showDetail(t,filename,dom){
             var ext = filename.split('.')[1];
+            var that = $(dom);
             if(ext == "png" || ext == "gif" || ext == "jpg" || ext == "jpge"){
                 $("#showDetail").html("<img src="+filename+" />");
             }else{
 //                如何把php获取的文件内容传给js来显示
-//                var text = <?php //echo filename ?>//;
-                $("#showDetail").html(<?php echo file_get_contents(filename) ?>);
+                var text = that.next('div').html();
+                $("#showDetail").html(text);
             }
             $("#showDetail").dialog({
                 height:"auto",
@@ -247,15 +248,15 @@ EOF;
                                 $imgExt = array("gif","png","jpg","jpge");
                                 if(in_array($ext,$imgExt)){
                                     ?>
-                                   <a href="javascript:;" onclick="showDetail('<?php echo $val ?>','<?php echo $currentPathVal ?>')"><img class="small" src="images/show.png"  alt="" title="查看"/></a>|
+                                   <a href="javascript:;" onclick="showDetail('<?php echo $val ?>','<?php echo $currentPathVal ?>',this)"><img class="small" src="images/show.png"  alt="" title="查看"/></a>|
 
                             <?php
                                 }else{
                             ?>
-
-                                    <a href="javascript:;" onclick="showDetail('<?php echo $val ?>','<?php echo $currentPathVal ?>')"><img class="small" src="images/show.png"  alt="" title="查看"/></a>|
+<!--多了个1-->
+                                    <a href="javascript:;" onclick="showDetail('<?php echo $val ?>','<?php echo $currentPathVal ?>',this)"><img class="small" src="images/show.png"  alt="" title="查看"/></a>|
                                     <div style="display: none;"><?php echo highlight_string(file_get_contents($currentPathVal)) ?></div>
-                                    <?php
+                            <?php
                                 }
                             ?>
                             <a href="index.php?act=editContent&filename=<?php echo $currentPathVal;?>"><img class="small" src="images/edit.png"  alt="" title="修改"/></a>|
