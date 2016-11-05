@@ -57,6 +57,10 @@ EOF;
     alertMes($mes,$redirect);
 
 
+}elseif($act==="renameFile"){
+//    重命名文件
+//    renameFile()
+
 }
 
 
@@ -119,7 +123,14 @@ EOF;
             }
         }
         function showDetail(t,filename){
-            $("#showImg").attr("src",filename);
+            var ext = filename.split('.')[1];
+            if(ext == "png" || ext == "gif" || ext == "jpg" || ext == "jpge"){
+                $("#showDetail").html("<img src="+filename+" />");
+            }else{
+//                如何把php获取的文件内容传给js来显示
+//                var text = <?php //echo filename ?>//;
+                $("#showDetail").html(<?php echo file_get_contents(filename) ?>);
+            }
             $("#showDetail").dialog({
                 height:"auto",
                 width: "auto",
@@ -139,7 +150,7 @@ EOF;
 </head>
 
 <body>
-<div id="showDetail"  style="display:none"><img src="" id="showImg" alt=""/></div>
+<div id="showDetail"  style="display:none"></div>
 <h1>慕课网-在线文件管理器</h1>
 <div id="top">
     <ul id="navi">
@@ -230,7 +241,23 @@ EOF;
                             <?php echo date("Y-m-d H:i:s",fileatime($currentPathVal)) ?>
                         </td>
                         <td>
-                            <a href="index.php?act=showContent&filename=<?php echo $currentPathVal;?>" ><img class="small" src="images/show.png"  alt="" title="查看"/></a>|
+                            <?php
+//                                先得到后缀名
+                                $ext = strtolower(end(explode(".",$currentPathVal)));
+                                $imgExt = array("gif","png","jpg","jpge");
+                                if(in_array($ext,$imgExt)){
+                                    ?>
+                                   <a href="javascript:;" onclick="showDetail('<?php echo $val ?>','<?php echo $currentPathVal ?>')"><img class="small" src="images/show.png"  alt="" title="查看"/></a>|
+
+                            <?php
+                                }else{
+                            ?>
+
+                                    <a href="javascript:;" onclick="showDetail('<?php echo $val ?>','<?php echo $currentPathVal ?>')"><img class="small" src="images/show.png"  alt="" title="查看"/></a>|
+                                    <div style="display: none;"><?php echo highlight_string(file_get_contents($currentPathVal)) ?></div>
+                                    <?php
+                                }
+                            ?>
                             <a href="index.php?act=editContent&filename=<?php echo $currentPathVal;?>"><img class="small" src="images/edit.png"  alt="" title="修改"/></a>|
                             <a href="index.php?act=renameFile&filename=<?php echo $currentPathVal;?>"><img class="small" src="images/rename.png"  alt="" title="重命名"/></a>|
                             <a href="index.php?act=copyFile&filename=<?php echo $currentPathVal;?>"><img class="small" src="images/copy.png"  alt="" title="复制"/></a>|
