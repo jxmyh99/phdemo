@@ -57,10 +57,24 @@ EOF;
     alertMes($mes,$redirect);
 
 
-}elseif($act==="renameFile"){
+}elseif($act === "renameFile"){
 //    重命名文件
 //    renameFile()
-
+    $srt = <<<EOF
+    <form action="index.php?act=doRename" method="post"> 
+	请填写新文件名:<input type="text" name="newname" placeholder="重命名"/>
+	<input type='hidden' name='filename' value='{$filename}' />
+	<input type="submit" value="重命名"/>
+	</form>
+EOF;
+    echo $srt;
+}elseif($act === "doRename"){
+    //实现重命名
+    //获取传过来的新名称
+    $newName = $_REQUEST['newname'];
+    $oldName = $filename;
+    $mes = renameFile($oldName,$newName);
+    alertMes($mes,$redirect);
 }
 
 
