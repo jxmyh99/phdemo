@@ -57,13 +57,15 @@ function createFile($filename){
  */
 function renameFile($oldname,$newname){
     $path = dirname($oldname);
+    $name = pathinfo(basename($oldname))['filename'];
+    $hz = pathinfo(basename($oldname))['extension'];
 //    php如何取文件的后缀名
 //    php如何取文件的文件名
     //判断文件名是否合法
     if(ckeckFileName($newname)){
         //判断文件名是否存在相同
         if(!file_exists($path.'/'.$newname)){
-            if(rename($oldname,$path.'/'.$newname)){
+            if(rename($oldname,$path.'/'.$newname.'.'.$hz)){
                 return "文件重命名成功";
             }else{
                 return "文件重命名失败";
@@ -82,7 +84,9 @@ function renameFile($oldname,$newname){
  */
 function ckeckFileName($filename){
     $patten = "/[\/,\*,\,,<,>,\?,\|]/";
-    if(preg_match($patten,basename($filename))){
+    $name = pathinfo(basename($filename))['filename'];
+    $hz = pathinfo(basename($filename))['extension'];
+    if(preg_match($patten,$name)){
         return false;
     }else{
         return true;
