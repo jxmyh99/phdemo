@@ -75,6 +75,13 @@ EOF;
     $oldName = $filename;
     $mes = renameFile($oldName,$newName);
     alertMes($mes,$redirect);
+}elseif($act == "delFile"){
+    $mes = delFile($filename);
+    alertMes($mes,$redirect);
+
+}elseif($act == "downFile"){
+     downfile($filename);
+//    alertMes($mes,$redirect);
 }
 
 

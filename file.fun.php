@@ -92,3 +92,23 @@ function ckeckFileName($filename){
         return true;
     }
 }
+
+/**
+ * 删除文件
+ */
+function delFile($filename){
+    if(unlink($filename)){
+        $mes = "文件删除成功！";
+    }else{
+        $mes = "文件删除失败";
+    }
+    return $mes;
+}
+/**
+ * 下载文件
+ */
+function downFile($filename){
+    header("content-disposition:attachment;filename=".basename($filename));
+    header("content-length:".filesize($filename));
+    readfile($filename);
+}
