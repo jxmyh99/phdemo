@@ -27,3 +27,23 @@ function readDircectory($path)
     closedir($path);
     return $arr;
 }
+
+function dirSize($path){
+    $sum = 0;
+    global $sum;
+    $handle = opendir($path);
+    while (($item = readdir($handle))!== false){
+        if($item !='.' && $item != '..'){
+            if(is_file($path.'/'.$item)){
+                $sum += filesize($path.'/'.$item);
+            }
+            if(is_dir($path.'/'.$item)){
+                $func = __FUNCTION__;
+                $func($path.'/'.$item);
+            }
+        }
+
+    }
+    closedir($handle);
+    return $sum;
+}

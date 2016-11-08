@@ -223,8 +223,63 @@ EOF;
             <td>操作</td>
         </tr>
         <?php
-        if($info['file']){
+        if($info['dir']){
             $i = 1;
+            foreach ($info['dir'] as $val){
+
+                // 当前文件
+                $currentPathVal = $currentPath.$val;
+                ?>
+                <tr>
+                    <td><?php echo $i ?></td>
+                    <td><?php echo $val ?></td>
+                    <td>
+                        <?php $src = filetype($currentPathVal) == "file" ? "file_ico.png" : "folder_ico.png" ?>
+                        <img src="images/<?php echo $src ?>" alt="">
+                    </td>
+                    <td>
+                        <?php $sum=0; echo readFileType(dirSize($currentPathVal)) ?>
+                    </td>
+                    <td>
+                        <?php $src = is_readable($currentPathVal) ? "correct.png" : "error.png"; ?>
+                        <img src="images/<?php echo $src ?>" width="28" height="28" alt="">
+                    </td>
+                    <td>
+                        <?php $src = is_writable($currentPathVal) ? "correct.png" : "error.png"; ?>
+                        <img src="images/<?php echo $src ?>" width="28" height="28" alt="">
+                    </td>
+                    <td>
+                        <?php $src = is_executable($currentPathVal) ? "correct.png" : "error.png"; ?>
+                        <img src="images/<?php echo $src ?>" width="28" height="28" alt="">
+                    </td>
+                    <td>
+                        <?php echo date("Y-m-d H:i:s",filectime($currentPathVal)) ?>
+                    </td>
+                    <td>
+                        <?php echo date("Y-m-d H:i:s",filemtime($currentPathVal)) ?>
+                    </td>
+                    <td>
+                        <?php echo date("Y-m-d H:i:s",fileatime($currentPathVal)) ?>
+                    </td>
+                    <td>
+                        <a href="index.php?act=showContent&filename=<?php echo $currentPathVal;?>"><img class="small" src="images/show.png"  alt="" title="查看"/></a>|
+
+                        <a href="index.php?act=editContent&filename=<?php echo $currentPathVal;?>"><img class="small" src="images/edit.png"  alt="" title="修改"/></a>|
+                        <a href="index.php?act=renameFile&filename=<?php echo $currentPathVal;?>"><img class="small" src="images/rename.png"  alt="" title="重命名"/></a>|
+                        <a href="index.php?act=copyFile&filename=<?php echo $currentPathVal;?>"><img class="small" src="images/copy.png"  alt="" title="复制"/></a>|
+                        <a href="index.php?act=cutFile&filename=<?php echo $currentPathVal;?>"><img class="small" src="images/cut.png"  alt="" title="剪切"/></a>|
+                        <a href="#"  onclick="delFile('<?php echo $currentPathVal;?>','<?php echo $path;?>')"><img class="small" src="images/delete.png"  alt="" title="删除"/></a>|
+                        <a href="index.php?act=downFile&filename=<?php echo $currentPathVal;?>"><img class="small"  src="images/download.png"  alt="" title="下载"/></a>
+
+                    </td>
+                </tr>
+                <?php
+                $i++;
+            }
+        }
+        ?>
+        <?php
+        if($info['file']){
             foreach ($info['file'] as $val){
                 // 当前文件
                 $currentPathVal = $currentPath.$val;
@@ -264,16 +319,16 @@ EOF;
                     </td>
                     <td>
                         <?php
-                        //                                先得到后缀名
-                        $ext = strtolower(end(explode(".",$currentPathVal)));
-                        $imgExt = array("gif","png","jpg","jpge");
-                        if(in_array($ext,$imgExt)){
-                            ?>
+                            //                                先得到后缀名
+                            $ext = strtolower(end(explode(".",$currentPathVal)));
+                            $imgExt = array("gif","png","jpg","jpge");
+                            if(in_array($ext,$imgExt)){
+                        ?>
                             <a href="javascript:;" onclick="showDetail('<?php echo $val ?>','<?php echo $currentPathVal ?>',this)"><img class="small" src="images/show.png"  alt="" title="查看"/></a>|
 
-                            <?php
+                        <?php
                         }else{
-                            ?>
+                        ?>
 <!--                            问题在于是在highlight_string的时候不要使用echo输出-->
                             <!--多了个1-->
                             <a href="javascript:;" onclick="showDetail('<?php echo $val ?>','<?php echo $currentPathVal ?>',this)"><img class="small" src="images/show.png"  alt="" title="查看"/></a>|
@@ -295,6 +350,7 @@ EOF;
             }
         }
         ?>
+
     </table>
 </form>
 
