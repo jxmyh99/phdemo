@@ -16,7 +16,7 @@ $filename = $_REQUEST['filename'];
 $redirect = "index.php?path={$path}";
 //判断是否是创建文件
 if($act == 'createFile'){
-   $mes =  createFile($currentPath.$filename);
+    $mes =  createFile($currentPath.$filename);
     alertMes($mes,$redirect);
 }elseif($act === 'showContent'){
     //查看文件内容操作
@@ -25,12 +25,12 @@ if($act == 'createFile'){
     //高亮显示代码
     if(strlen($content)){
         $newContent = highlight_string($content,true);
-    //    highlight_file($filename);
+        //    highlight_file($filename);
         $str = <<<EOF
         <div style='width:100%;height:200px;overflow:auto;background:pink'>{$newContent}</div>
 
 EOF;
-     echo $str;
+        echo $str;
     }else{
         alertMes("文件没有内容,请先编辑再查看！",$redirect);
     }
@@ -223,76 +223,77 @@ EOF;
             <td>操作</td>
         </tr>
         <?php
-            if($info['file']){
-                $i = 1;
-                foreach ($info['file'] as $val){
-                    // 当前文件
-                    $currentPathVal = $currentPath.$val;
-                    //当前文件大小
-                    $size = filesize($currentPathVal);
-        ?>
-                    <tr>
-                        <td><?php echo $i ?></td>
-                        <td><?php echo $val ?></td>
-                        <td>
-                            <?php $src = filetype($currentPathVal) == "file" ? "file_ico.png" : "folder_ico.png" ?>
-                            <img src="images/<?php echo $src ?>" alt="">
-                        </td>
-                        <td>
-                            <?php echo readFileType($size) ?>
-                        </td>
-                        <td>
-                            <?php $src = is_readable($currentPathVal) ? "correct.png" : "error.png"; ?>
-                            <img src="images/<?php echo $src ?>" width="28" height="28" alt="">
-                        </td>
-                        <td>
-                            <?php $src = is_writable($currentPathVal) ? "correct.png" : "error.png"; ?>
-                            <img src="images/<?php echo $src ?>" width="28" height="28" alt="">
-                        </td>
-                        <td>
-                            <?php $src = is_executable($currentPathVal) ? "correct.png" : "error.png"; ?>
-                            <img src="images/<?php echo $src ?>" width="28" height="28" alt="">
-                        </td>
-                        <td>
-                            <?php echo date("Y-m-d H:i:s",filectime($currentPathVal)) ?>
-                        </td>
-                        <td>
-                            <?php echo date("Y-m-d H:i:s",filemtime($currentPathVal)) ?>
-                        </td>
-                        <td>
-                            <?php echo date("Y-m-d H:i:s",fileatime($currentPathVal)) ?>
-                        </td>
-                        <td>
-                            <?php
-//                                先得到后缀名
-                                $ext = strtolower(end(explode(".",$currentPathVal)));
-                                $imgExt = array("gif","png","jpg","jpge");
-                                if(in_array($ext,$imgExt)){
-                                    ?>
-                                   <a href="javascript:;" onclick="showDetail('<?php echo $val ?>','<?php echo $currentPathVal ?>',this)"><img class="small" src="images/show.png"  alt="" title="查看"/></a>|
+        if($info['file']){
+            $i = 1;
+            foreach ($info['file'] as $val){
+                // 当前文件
+                $currentPathVal = $currentPath.$val;
+                //当前文件大小
+                $size = filesize($currentPathVal);
+                ?>
+                <tr>
+                    <td><?php echo $i ?></td>
+                    <td><?php echo $val ?></td>
+                    <td>
+                        <?php $src = filetype($currentPathVal) == "file" ? "file_ico.png" : "folder_ico.png" ?>
+                        <img src="images/<?php echo $src ?>" alt="">
+                    </td>
+                    <td>
+                        <?php echo readFileType($size) ?>
+                    </td>
+                    <td>
+                        <?php $src = is_readable($currentPathVal) ? "correct.png" : "error.png"; ?>
+                        <img src="images/<?php echo $src ?>" width="28" height="28" alt="">
+                    </td>
+                    <td>
+                        <?php $src = is_writable($currentPathVal) ? "correct.png" : "error.png"; ?>
+                        <img src="images/<?php echo $src ?>" width="28" height="28" alt="">
+                    </td>
+                    <td>
+                        <?php $src = is_executable($currentPathVal) ? "correct.png" : "error.png"; ?>
+                        <img src="images/<?php echo $src ?>" width="28" height="28" alt="">
+                    </td>
+                    <td>
+                        <?php echo date("Y-m-d H:i:s",filectime($currentPathVal)) ?>
+                    </td>
+                    <td>
+                        <?php echo date("Y-m-d H:i:s",filemtime($currentPathVal)) ?>
+                    </td>
+                    <td>
+                        <?php echo date("Y-m-d H:i:s",fileatime($currentPathVal)) ?>
+                    </td>
+                    <td>
+                        <?php
+                        //                                先得到后缀名
+                        $ext = strtolower(end(explode(".",$currentPathVal)));
+                        $imgExt = array("gif","png","jpg","jpge");
+                        if(in_array($ext,$imgExt)){
+                            ?>
+                            <a href="javascript:;" onclick="showDetail('<?php echo $val ?>','<?php echo $currentPathVal ?>',this)"><img class="small" src="images/show.png"  alt="" title="查看"/></a>|
 
                             <?php
-                                }else{
+                        }else{
                             ?>
-<!--多了个1-->
-                                    <a href="javascript:;" onclick="showDetail('<?php echo $val ?>','<?php echo $currentPathVal ?>',this)"><img class="small" src="images/show.png"  alt="" title="查看"/></a>|
-                                    <div style="display: none;"><?php echo highlight_string(file_get_contents($currentPathVal)) ?></div>
+<!--                            问题在于是在highlight_string的时候不要使用echo输出-->
+                            <!--多了个1-->
+                            <a href="javascript:;" onclick="showDetail('<?php echo $val ?>','<?php echo $currentPathVal ?>',this)"><img class="small" src="images/show.png"  alt="" title="查看"/></a>|
+                            <div style="display: none;"><?php  highlight_string(file_get_contents($currentPathVal)) ?></div>
                             <?php
-                                }
-                            ?>
-                            <a href="index.php?act=editContent&filename=<?php echo $currentPathVal;?>"><img class="small" src="images/edit.png"  alt="" title="修改"/></a>|
-                            <a href="index.php?act=renameFile&filename=<?php echo $currentPathVal;?>"><img class="small" src="images/rename.png"  alt="" title="重命名"/></a>|
-                            <a href="index.php?act=copyFile&filename=<?php echo $currentPathVal;?>"><img class="small" src="images/copy.png"  alt="" title="复制"/></a>|
-                            <a href="index.php?act=cutFile&filename=<?php echo $currentPathVal;?>"><img class="small" src="images/cut.png"  alt="" title="剪切"/></a>|
-                            <a href="#"  onclick="delFile('<?php echo $currentPathVal;?>','<?php echo $path;?>')"><img class="small" src="images/delete.png"  alt="" title="删除"/></a>|
-                            <a href="index.php?act=downFile&filename=<?php echo $currentPathVal;?>"><img class="small"  src="images/download.png"  alt="" title="下载"/></a>
+                        }
+                        ?>
+                        <a href="index.php?act=editContent&filename=<?php echo $currentPathVal;?>"><img class="small" src="images/edit.png"  alt="" title="修改"/></a>|
+                        <a href="index.php?act=renameFile&filename=<?php echo $currentPathVal;?>"><img class="small" src="images/rename.png"  alt="" title="重命名"/></a>|
+                        <a href="index.php?act=copyFile&filename=<?php echo $currentPathVal;?>"><img class="small" src="images/copy.png"  alt="" title="复制"/></a>|
+                        <a href="index.php?act=cutFile&filename=<?php echo $currentPathVal;?>"><img class="small" src="images/cut.png"  alt="" title="剪切"/></a>|
+                        <a href="#"  onclick="delFile('<?php echo $currentPathVal;?>','<?php echo $path;?>')"><img class="small" src="images/delete.png"  alt="" title="删除"/></a>|
+                        <a href="index.php?act=downFile&filename=<?php echo $currentPathVal;?>"><img class="small"  src="images/download.png"  alt="" title="下载"/></a>
 
-                        </td>
-                    </tr>
-        <?php
-                    $i++;
-                }
+                    </td>
+                </tr>
+                <?php
+                $i++;
             }
+        }
         ?>
     </table>
 </form>
