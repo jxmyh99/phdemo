@@ -5,6 +5,9 @@ require_once "common.fun.php";
 //解决时间差
 //date_default_timezone_set('prc');
 $path = "file";
+//这里出错，原因是因为查看文件夹的时候不能显示文件夹的内容
+$path = $_REQUEST['path'] ? $_REQUEST['path'] : $path;
+
 $info = readDircectory($path);
 $currentPath = $path."/";
 //print_r($currentPath);
@@ -238,7 +241,7 @@ EOF;
                         <img src="images/<?php echo $src ?>" alt="">
                     </td>
                     <td>
-                        <?php $sum=0; echo readFileType(dirSize($currentPathVal)) ?>
+                      <?php $sum=0; echo readFileType(dirSize($currentPathVal)) ?>
                     </td>
                     <td>
                         <?php $src = is_readable($currentPathVal) ? "correct.png" : "error.png"; ?>
@@ -262,9 +265,7 @@ EOF;
                         <?php echo date("Y-m-d H:i:s",fileatime($currentPathVal)) ?>
                     </td>
                     <td>
-                        <a href="index.php?act=showContent&filename=<?php echo $currentPathVal;?>"><img class="small" src="images/show.png"  alt="" title="查看"/></a>|
-
-                        <a href="index.php?act=editContent&filename=<?php echo $currentPathVal;?>"><img class="small" src="images/edit.png"  alt="" title="修改"/></a>|
+                        <a href="index.php?path=<?php echo $currentPathVal;?>"><img class="small" src="images/show.png"  alt="" title="查看"/></a>|
                         <a href="index.php?act=renameFile&filename=<?php echo $currentPathVal;?>"><img class="small" src="images/rename.png"  alt="" title="重命名"/></a>|
                         <a href="index.php?act=copyFile&filename=<?php echo $currentPathVal;?>"><img class="small" src="images/copy.png"  alt="" title="复制"/></a>|
                         <a href="index.php?act=cutFile&filename=<?php echo $currentPathVal;?>"><img class="small" src="images/cut.png"  alt="" title="剪切"/></a>|
